@@ -1,0 +1,71 @@
+Cursor Movement:
+
+\033[A: Move cursor up
+\033[B: Move cursor down
+\033[C: Move cursor forward (right)
+\033[D: Move cursor backward (left)
+\033[E: Move cursor to the beginning of the next line
+\033[F: Move cursor to the beginning of the previous line
+\033[G: Move cursor to column n
+\033[H: Move cursor to the top-left corner of the screen
+\033[{n};{m}H: Move cursor to specific position (row n, column m)
+
+
+Text Formatting:
+
+\033[0m: Reset all text attributes (color, style)
+\033[1m: Bold or increased intensity
+\033[2m: Faint (decreased intensity)
+\033[3m: Italic
+\033[4m: Underline
+\033[5m: Blink (slow)
+\033[6m: Blink (rapid)
+\033[7m: Reverse video (swap foreground and background colors)
+\033[8m: Conceal (hide characters)
+\033[9m: Crossed-out or strikethrough
+\033[21m: Double underline
+\033[22m: Normal intensity
+\033[24m: Disable underline
+\033[25m: Disable blink
+\033[27m: Disable reverse video
+\033[28m: Disable conceal
+\033[29m: Disable crossed-out
+
+
+Text Color:
+
+\033[30m: Black foreground
+\033[31m: Red foreground
+\033[32m: Green foreground
+\033[33m: Yellow foreground
+\033[34m: Blue foreground
+\033[35m: Magenta foreground
+\033[36m: Cyan foreground
+\033[37m: White foreground
+\033[38;5;{n}m: 256-color foreground
+\033[39m: Default foreground color
+
+
+Background Color:
+
+\033[40m: Black background
+\033[41m: Red background
+\033[42m: Green background
+\033[43m: Yellow background
+\033[44m: Blue background
+\033[45m: Magenta background
+\033[46m: Cyan background
+\033[47m: White background
+\033[48;5;{n}m: 256-color background
+\033[49m: Default background color
+
+
+Other:
+
+\033[2J: Clear entire screen
+\033[K: Clear line from cursor position to the end of the line
+\033[s: Save cursor position
+\033[u: Restore cursor position
+\033[nA: Query cursor position (returns ESC[row;columnR)
+\033[nB: Query cursor position (returns ESC[row;columnR)
+\033]0;{string}\007: Set icon name and window title
