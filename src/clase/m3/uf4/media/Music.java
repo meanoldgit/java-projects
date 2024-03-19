@@ -1,4 +1,4 @@
-package UF4.media;
+package clase.m3.uf4.media;
 
 public class Music extends Media {
     

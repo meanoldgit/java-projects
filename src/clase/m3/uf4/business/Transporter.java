@@ -1,12 +1,12 @@
-package UF4.business;
+package clase.m3.uf4.business;
 
-public class Client {
-
+public class Transporter {
+    
     private String name;
     private String phone;
     private int licenceNum;
 
-    public Client(String name, String phone, int licenceNum) {
+    public Transporter(String name, String phone, int licenceNum) {
         this.name = name;
         this.phone = phone;
         this.licenceNum = licenceNum;

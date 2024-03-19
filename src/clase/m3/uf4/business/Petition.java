@@ -1,4 +1,4 @@
-package UF4.business;
+package clase.m3.uf4.business;
 
 public class Petition {
     private int quantity;
