@@ -10,42 +10,33 @@ import java.util.Random;
 
 public class Tetris extends Variables
 {
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         JFrame frame = new JFrame("Tetris");
         long startTimer;
         long stopTimer;
         boolean isFalling = true;
 
-        Thread thread = new Thread(() ->
-        {
-            while (loop)
-            {
+        Thread thread = new Thread(() -> {
+            while (loop) {
                 drawGame();
 
-                if (leftPressed && canMove)
-                {
+                if (leftPressed && canMove) {
                     move(LEFT);
-                    if (leftJustPressed)
-                    {
+                    if (leftJustPressed) {
                         leftJustPressed = false;
                         timer(150);
                     }
-                    else
-                    {
+                    else {
                         timer(50);
                     }
                 }
-                else if (rightPressed && canMove)
-                {
+                else if (rightPressed && canMove) {
                     move(RIGHT);
-                    if (rightJustPressed)
-                    {
+                    if (rightJustPressed) {
                         rightJustPressed = false;
                         timer(150);
                     }
-                    else
-                    {
+                    else {
                         timer(50);
                     }
                 }
@@ -68,32 +59,27 @@ public class Tetris extends Variables
 
         // MAIN LOOP
 
-        while (loop)
-        {
+        while (loop) {
             castShadow();
             drawShape(DRAW_BLOCK);
             
             // Loop timer.
             startTimer = System.nanoTime();
             stopTimer = System.nanoTime() + 1;
-            while (stopTimer < (startTimer + millis * 1_000_000) && !downPressed && !spacePressed && isFalling)
-            {
+            while (stopTimer < (startTimer + millis * 1_000_000) && !downPressed && !spacePressed && isFalling) {
                 stopTimer = System.nanoTime();
             }
 
             if (downPressed && !spacePressed) timer(75);
 
-            if (isFalling && !touchingFloor())
-            {
+            if (isFalling && !touchingFloor()) {
                 drawShape(ERASE_BLOCK);
 
                 // Make the shape fall.
                 if (canMove) shapeY++;
 
-                if (pushBack())
-                {
-                    if ((!leftPressed && !rightPressed) || spacePressed)
-                    {
+                if (pushBack()) {
+                    if ((!leftPressed && !rightPressed) || spacePressed) {
                         canMove = false;
                         isFalling = false;
                         // TODO: Make a timer to avoid infinite time to place shape.
@@ -102,11 +88,9 @@ public class Tetris extends Variables
                     shapeY--;
                 }
             }
-            else
-            {
+            else {
                 // Small frame to place a shape to a side right before landing.
-                if (touchingFloor())
-                {
+                if (touchingFloor()) {
                     if (leftPressed) move(LEFT);
                     else if (rightPressed) move(RIGHT);
                 }
@@ -126,8 +110,7 @@ public class Tetris extends Variables
                 nextShape = SHAPES[rand.nextInt(0, SHAPES.length)];
 
                 // Randomly assign a color until it's different from the prev color.
-                while (shapeColor.equals(prevShapeColor))
-                {
+                while (shapeColor.equals(prevShapeColor)) {
                     shapeColor = COLORS[rand.nextInt(0, COLORS.length)];
                 }
 
@@ -148,8 +131,7 @@ public class Tetris extends Variables
 
     // DRAW SHAPE
 
-    static void drawShape(char action)
-    {
+    static void drawShape(char action) {
         char[][][] shp;
         int blockX;
         int blockY;
@@ -159,13 +141,11 @@ public class Tetris extends Variables
         int x;
         int y;
 
-        if (action == DRAW_NEXT_SHAPE)
-        {
+        if (action == DRAW_NEXT_SHAPE) {
             dir = 0;
             shp = nextShape;
         }
-        else
-        {
+        else {
             dir = direction;
             shp = shape;
         }
@@ -178,23 +158,20 @@ public class Tetris extends Variables
         //? Maybe ogX, ogY and ogDir should be set here...
 
 
-        for (int i = 0; i < height; i++)
-        {
+        for (int i = 0; i < height; i++) {
             blockY = y + i;
             width = shp[dir][i].length;
-            for (int j = 0; j < width; j++)
-            {
+
+            for (int j = 0; j < width; j++) {
                 blockX = x + j;
-                if (shp[dir][i][j] == BLOCK)
-                {
-                    if (action == DRAW_NEXT_SHAPE)
-                    {
+                
+                if (shp[dir][i][j] == BLOCK) {
+                    if (action == DRAW_NEXT_SHAPE) {
                         if (nextShape == O) nextShapeGrid[i + 1][j + 1] = BLOCK;
                         else if (!(nextShape == T || nextShape == J || nextShape == I)) nextShapeGrid[i + 1][j] = BLOCK;
                         else nextShapeGrid[i][j] = BLOCK;
                     }
-                    else
-                    {
+                    else {
                         grid[blockY][blockX] = action;
                         colorGrid[blockY][blockX] = shapeColor;
                     }
@@ -206,22 +183,18 @@ public class Tetris extends Variables
 
     // PUSH BACK
 
-    static boolean pushBack()
-    {
+    static boolean pushBack() {
         int blockX;
         int blockY;
         int height = shape[direction].length;
         int width;
 
-        for (int i = 0; i < height; i++)
-        {
+        for (int i = 0; i < height; i++) {
             blockY = shapeY + i;
             width = shape[direction][i].length;
-            for (int j = 0; j < width; j++)
-            {
+            for (int j = 0; j < width; j++) {
                 blockX = shapeX + j;
-                if (shape[direction][i][j] == BLOCK)
-                {
+                if (shape[direction][i][j] == BLOCK) {
                     if (grid[blockY][blockX] == BLOCK) return true;
                 }
             }
@@ -233,8 +206,7 @@ public class Tetris extends Variables
 
     // CHECK LINE
 
-    static void checkLine()
-    {
+    static void checkLine() {
         int blockCounter;
         boolean isLine;
         boolean soundPlayed;
@@ -242,46 +214,37 @@ public class Tetris extends Variables
         String colorUpperCell;
         checkingLine = true;
         
-        for (int rowToCheck = gridHeight; rowToCheck > 0; rowToCheck--)
-        {
+        for (int rowToCheck = gridHeight; rowToCheck > 0; rowToCheck--) {
             isLine = true;
             blockCounter = 0;
             soundPlayed = false;
 
             // Check line.
-            for (int col = 0; col < grid[rowToCheck].length && isLine; col++)
-            {
-                if (grid[rowToCheck][col] == BLOCK)
-                {
+            for (int col = 0; col < grid[rowToCheck].length && isLine; col++) {
+                if (grid[rowToCheck][col] == BLOCK) {
                     blockCounter++;
                 }
-                else
-                {
+                else {
                     isLine = false;
                 }
             }
 
             // Check if there's a full line of blocks.
-            if (blockCounter == COLS)
-            {
+            if (blockCounter == COLS) {
                 // Increase lines counter.
                 lines++;
 
                 // "Animation".
-                for (int i = 0; i < COLS; i++)
-                {
+                for (int i = 0; i < COLS; i++) {
                     // Remove line.
                     grid[rowToCheck][i] = EMPTY;
                     if (i % 3 == 1) playSound(LANDED);
                     timer(30);
                 }
 
-                for (int i = rowToCheck; i > 0; i--)
-                {
-                    for (int j = 0; j < grid[rowToCheck].length; j++)
-                    {
-                        if (!soundPlayed)
-                        {
+                for (int i = rowToCheck; i > 0; i--) {
+                    for (int j = 0; j < grid[rowToCheck].length; j++) {
+                        if (!soundPlayed) {
                             soundPlayed = true;
                             playSound(LINE_CLEAR);
                         }
@@ -314,24 +277,19 @@ public class Tetris extends Variables
 
     // KEY LISTENER
 
-    static class Key implements KeyListener
-    {
+    static class Key implements KeyListener {
         @Override
-        public void keyTyped(KeyEvent e)
-        {
+        public void keyTyped(KeyEvent e) {
             // pass
         }
 
         @Override
-        public void keyPressed(KeyEvent e)
-        {
-            switch (e.getKeyCode())
-            {
+        public void keyPressed(KeyEvent e) {
+            switch (e.getKeyCode()) {
                 // LEFT
                 case KeyEvent.VK_A:
                 leftPressed = true;
-                if (leftJustPressed && canMove)
-                {
+                if (leftJustPressed && canMove) {
                     playSound(MOVE);
                 }
                 break;
@@ -339,8 +297,7 @@ public class Tetris extends Variables
                 // RIGHT
                 case KeyEvent.VK_D:
                 rightPressed = true;
-                if (rightJustPressed && canMove)
-                {
+                if (rightJustPressed && canMove) {
                     playSound(MOVE);
                 }
                 break;
@@ -368,8 +325,7 @@ public class Tetris extends Variables
 
                 // PAUSE
                 case KeyEvent.VK_ENTER, KeyEvent.VK_E:
-                if (!titleScreen)
-                {
+                if (!titleScreen) {
                     pause();
                     playSound(PAUSE);
                 }
@@ -386,28 +342,22 @@ public class Tetris extends Variables
         }
 
         @Override
-        public void keyReleased(KeyEvent e)
-        {
-            if (e.getKeyCode() == KeyEvent.VK_A)
-            {
+        public void keyReleased(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_A) {
                 leftPressed = false;
                 leftJustPressed = true;
             }
-            else if (e.getKeyCode() == KeyEvent.VK_D)
-            {
+            else if (e.getKeyCode() == KeyEvent.VK_D) {
                 rightPressed = false;
                 rightJustPressed = true;
             }
-            else if (e.getKeyCode() == KeyEvent.VK_W)
-            {
+            else if (e.getKeyCode() == KeyEvent.VK_W) {
                 upPressed = false;
             }
-            else if (e.getKeyCode() == KeyEvent.VK_S)
-            {
+            else if (e.getKeyCode() == KeyEvent.VK_S) {
                 downPressed = false;
             }
-            else if (e.getKeyCode() == KeyEvent.VK_SPACE)
-            {
+            else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                 spacePressed = false;
             }
         }
@@ -416,8 +366,7 @@ public class Tetris extends Variables
 
     // DRAW GAME
 
-    static void drawGame()
-    {
+    static void drawGame() {
         String lineToPrint = "";
 
         clearNextShapeGrid();
@@ -428,13 +377,11 @@ public class Tetris extends Variables
         
         System.out.println("╔" + "═".repeat(COLS * 2 + 1) + "╦" + "═".repeat(12) + "╗");
         
-        for (int row = 0; row < grid.length; row++)
-        {
+        for (int row = 0; row < grid.length; row++) {
             System.out.print("║ ");
 
             // Draw grid.
-            for (int col = 0; col < grid[row].length; col++)
-            {
+            for (int col = 0; col < grid[row].length; col++) {
                 // Take the color from the color grid and display the block, if any, from the grid.
                 System.out.print(colorGrid[row][col] + grid[row][col] + " ");
             }
@@ -442,35 +389,29 @@ public class Tetris extends Variables
             // Reset the color.
             System.out.print(color);
             
-            if (row < 11)
-            {
+            if (row < 11) {
                 if (row == 0) System.out.println("║ Next:" + " ".repeat(6) + "║");
-                else if (row == 1)
-                {
+                else if (row == 1) {
                     System.out.print("║" + " ".repeat(2));
                     for (int i = 0; i < 4; i++) System.out.print(" " + nextShapeGrid[0][i]);
                     System.out.println("  ║");
                 }
-                else if (row == 2)
-                {
+                else if (row == 2) {
                     System.out.print("║" + " ".repeat(2));
                     for (int i = 0; i < 4; i++) System.out.print(" " + nextShapeGrid[1][i]);
                     System.out.println("  ║");
                 }
-                else if (row == 3)
-                {
+                else if (row == 3) {
                     System.out.print("║" + " ".repeat(2));
                     for (int i = 0; i < 4; i++) System.out.print(" " + nextShapeGrid[2][i]);
                     System.out.println("  ║");
                 }
-                else if (row == 4)
-                {
+                else if (row == 4) {
                     System.out.print("║" + " ".repeat(2));
                     for (int i = 0; i < 4; i++) System.out.print(" " + nextShapeGrid[3][i]);
                     System.out.println("  ║");
                 }
-                else
-                {
+                else {
                     if (row == 5) lineToPrint = "╠" + "═".repeat(12) + "╣";
                     else if (row == 6) lineToPrint = "║ Score:" + " ".repeat(5) + "║";
                     else if (row == 7) lineToPrint = "║ " + " ".repeat(10 - Long.toString(lines).length()) + lines + " ║";
@@ -481,8 +422,7 @@ public class Tetris extends Variables
                     System.out.println(lineToPrint);
                 }
             }
-            else
-            {
+            else {
                 System.out.println("║");
             }
         }
@@ -494,8 +434,7 @@ public class Tetris extends Variables
 
     // SHADOW THE EDGELORD
 
-    static void castShadow()
-    {
+    static void castShadow() {
         char[][][] shadow = shape;
         int shadowX = shapeX;
         int shadowY = shapeY;
@@ -504,30 +443,23 @@ public class Tetris extends Variables
         boolean blockFound = false;
 
         // Erase the shadows from the grid.
-        for (int i = 0; i < grid.length; i++)
-        {
-            for (int j = 0; j < grid[i].length; j++)
-            {
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
                 if (grid[i][j] == SHADOW) grid[i][j] = EMPTY;
             }
         }
 
         // Place the shadow.
-        while (!blockFound && shadowY + shadow[direction].length - 1 < gridHeight)
-        {
+        while (!blockFound && shadowY + shadow[direction].length - 1 < gridHeight) {
             // Make the shadow fall.
             shadowY++;
 
-            for (int i = 0; i < shadow[direction].length && !blockFound; i++)
-            {
+            for (int i = 0; i < shadow[direction].length && !blockFound; i++) {
                 blockY = shadowY + i;
-                for (int j = 0; j < shadow[direction][i].length && !blockFound; j++)
-                {
+                for (int j = 0; j < shadow[direction][i].length && !blockFound; j++) {
                     blockX = shadowX + j;
-                    if (shadow[direction][i][j] == BLOCK)
-                    {
-                        if (grid[blockY][blockX] == BLOCK)
-                        {
+                    if (shadow[direction][i][j] == BLOCK) {
+                        if (grid[blockY][blockX] == BLOCK) {
                             blockFound = true;
                             
                             // Push back up.
@@ -540,14 +472,11 @@ public class Tetris extends Variables
         }
 
         // Draw the shadow.
-        for (int i = 0; i < shadow[direction].length; i++)
-        {
+        for (int i = 0; i < shadow[direction].length; i++) {
             blockY = shadowY + i;
-            for (int j = 0; j < shadow[direction][i].length; j++)
-            {
+            for (int j = 0; j < shadow[direction][i].length; j++) {
                 blockX = shadowX + j;
-                if (shadow[direction][i][j] == BLOCK && grid[blockY][blockX] != BLOCK)
-                {
+                if (shadow[direction][i][j] == BLOCK && grid[blockY][blockX] != BLOCK) {
                     grid[blockY][blockX] = SHADOW;
                     colorGrid[blockY][blockX] = shapeColor;
                 }
@@ -558,17 +487,14 @@ public class Tetris extends Variables
 
     // MOVE
 
-    static void move(char dir)
-    {
+    static void move(char dir) {
         drawShape(ERASE_BLOCK);
 
-        if (dir == LEFT)
-        {
+        if (dir == LEFT) {
             if (leftClear()) shapeX--;
             if (pushBack()) shapeX++;
         }
-        else if (dir == RIGHT)
-        {
+        else if (dir == RIGHT) {
             if (rightClear()) shapeX++;
             if (pushBack()) shapeX--;
         }
@@ -580,18 +506,14 @@ public class Tetris extends Variables
 
     // LEFT/RIGHT CLEAR
 
-    static boolean leftClear()
-    {
+    static boolean leftClear() {
         int blockX;
-        for (int i = 0; i < shape[direction].length; i++)
-        {
-            for (int j = 0; j < shape[direction][i].length; j++)
-            {
+        for (int i = 0; i < shape[direction].length; i++) {
+            for (int j = 0; j < shape[direction][i].length; j++) {
                 blockX = shapeX + j;
 
                 // If the block X is at the left boundary (0) return false.
-                if (shape[direction][i][j] == BLOCK)
-                {
+                if (shape[direction][i][j] == BLOCK) {
                     if (blockX == 0) return false;
                 }
             }
@@ -600,8 +522,7 @@ public class Tetris extends Variables
         return true;
     }
 
-    static boolean rightClear()
-    {
+    static boolean rightClear() {
         boolean rightClear = shapeX + shape[direction][0].length - 1 < gridWidth;
         if (rightClear) return true;
         else return false;
@@ -610,20 +531,16 @@ public class Tetris extends Variables
 
     // ROTATE
 
-    static void rotate(char dir)
-    {
-        if (canMove)
-        {
+    static void rotate(char dir) {
+        if (canMove) {
             drawShape(ERASE_BLOCK);
             getOriginalPosition();
 
-            if (dir == LEFT)
-            {
+            if (dir == LEFT) {
                 if (direction > 0) direction--;
                 else direction = shape.length - 1;
             }
-            else if (dir == RIGHT)
-            {
+            else if (dir == RIGHT) {
                 if (direction < shape.length - 1) direction++;
                 else direction = 0;
             }
@@ -641,46 +558,37 @@ public class Tetris extends Variables
 
     // ROTATION FIX
 
-    static void rotationFix()
-    {
+    static void rotationFix() {
         int blockX;
         int blockY;
 
         // Left wall.
-        for (int i = 0; i < shape[direction].length; i++)
-        {
-            for (int j = 0; j < shape[direction][i].length; j++)
-            {
+        for (int i = 0; i < shape[direction].length; i++) {
+            for (int j = 0; j < shape[direction][i].length; j++) {
                 blockX = shapeX + j;
-                if (shape[direction][i][j] == BLOCK)
-                {
+                if (shape[direction][i][j] == BLOCK) {
                     if (blockX < 0) shapeX++;
                 }
             }
         }
         
         // Right wall.
-        while (shapeX + shape[direction][0].length - 1 > gridWidth)
-        {
+        while (shapeX + shape[direction][0].length - 1 > gridWidth) {
             shapeX--;
         }
 
         // Ceiling.
-        for (int i = 0; i < shape[direction].length; i++)
-        {
+        for (int i = 0; i < shape[direction].length; i++) {
             blockY = shapeY + i;
-            for (int j = 0; j < shape[direction][i].length; j++)
-            {
-                if (shape[direction][i][j] == BLOCK)
-                {
+            for (int j = 0; j < shape[direction][i].length; j++) {
+                if (shape[direction][i][j] == BLOCK) {
                     if (blockY < 0) shapeY++;
                 }
             }
         }
 
         // Floor.
-        while (shapeY + shape[direction].length - 1 > gridHeight)
-        {
+        while (shapeY + shape[direction].length - 1 > gridHeight) {
             shapeY--;
         }
     }
@@ -688,15 +596,13 @@ public class Tetris extends Variables
 
     // ORIGINAL POSITION
     
-    static void getOriginalPosition()
-    {
+    static void getOriginalPosition() {
         ogX = shapeX;
         ogY = shapeY;
         ogDir = direction;
     }
 
-    static void recoverOriginalPosition()
-    {
+    static void recoverOriginalPosition() {
         shapeX = ogX;
         shapeY = ogY;
         direction = ogDir;
@@ -705,8 +611,7 @@ public class Tetris extends Variables
 
     // GOTO START POSITION
 
-    static void goToStartPosition()
-    {
+    static void goToStartPosition() {
         shapeX = START_POSITION_X;
         shapeY = START_POSITION_Y;
     }
@@ -714,8 +619,7 @@ public class Tetris extends Variables
 
     // TOUCHING FLOOR
 
-    static boolean touchingFloor()
-    {
+    static boolean touchingFloor() {
         boolean notTouchingFloor = (shapeY + shape[direction].length - 1) < gridHeight;
         if (notTouchingFloor) return false;
         else return true;
@@ -724,10 +628,8 @@ public class Tetris extends Variables
 
     // NEXT LEVEL
 
-    static void nextLevel()
-    {
-        if (lines >= linesForNextLevel)
-        {
+    static void nextLevel() {
+        if (lines >= linesForNextLevel) {
             linesForNextLevel += 10;
             level++;
             
@@ -744,21 +646,16 @@ public class Tetris extends Variables
 
     // CHANGE COLOR
 
-    static void changeColor()
-    {
-        if (level < 8)
-        {
-            while (color.equals(prevColor))
-            {
+    static void changeColor() {
+        if (level < 8) {
+            while (color.equals(prevColor)) {
                 color = COLORS[rand.nextInt(0, COLORS.length - 1)];
             }
         }
-        else if (level < 9)
-        {
+        else if (level < 9) {
             color = COLOR_RED;
         }
-        else
-        {
+        else {
             color = COLOR_DARK_RED;
         }
 
@@ -768,14 +665,12 @@ public class Tetris extends Variables
 
     // TITLE SCREEN
 
-    static void showTitleScreen()
-    {
+    static void showTitleScreen() {
         clearScreen();
         formatSongNames();
         System.out.print(HIDE_CURSOR);
 
-        while (titleScreen)
-        {
+        while (titleScreen) {
             System.out.println(color);
             figlet("Tetris");
             System.out.println(" Music:\n");
@@ -784,8 +679,7 @@ public class Tetris extends Variables
             if (selectorY < 0) selectorY = themes.length - 1;
             else if (selectorY > themes.length - 1) selectorY = 0;
 
-            for (int i = 0; i < themes.length; i++)
-            {
+            for (int i = 0; i < themes.length; i++) {
                 System.out.print(color);
                 System.out.print(COLOR_WHITE);
                 if (selectorY == i) System.out.print(color);
@@ -811,16 +705,14 @@ public class Tetris extends Variables
         spacePressed = false;
     }
 
-    static void doNothing()
-    {
+    static void doNothing() {
         System.out.print("");
     }
 
 
     // FORMAT SONG NAMES
 
-    static void formatSongNames()
-    {
+    static void formatSongNames() {
         char[] letters;
         String name;
         String firstHalf;
@@ -829,8 +721,7 @@ public class Tetris extends Variables
         boolean dotFound;
         boolean capitalizeLetter;
 
-        for (int i = 0; i < THEMES.length; i++)
-        {
+        for (int i = 0; i < THEMES.length; i++) {
             letters = THEMES[i].toCharArray();
             name = "";
             firstHalf = "";
@@ -841,26 +732,21 @@ public class Tetris extends Variables
             firstHalf += " " + (i + 1) + ".";
 
             // Apply changes to the letters.
-            for (char letter : letters)
-            {
+            for (char letter : letters) {
                 if (letter == '.') dotFound = true;
 
-                if (slashFound && !dotFound)
-                {
+                if (slashFound && !dotFound) {
                     if (Character.isDigit(letter)) secondHalf += " ";
 
-                    if (capitalizeLetter)
-                    {
+                    if (capitalizeLetter) {
                         secondHalf += Character.toUpperCase(letter);
                         capitalizeLetter = false;
                     }
-                    else if (letter == '_')
-                    {
+                    else if (letter == '_') {
                         secondHalf += " ";
                         capitalizeLetter = true;
                     }
-                    else
-                    {
+                    else {
                         secondHalf += letter;
                     }
                 }
@@ -876,18 +762,15 @@ public class Tetris extends Variables
 
     // GAME OVER
 
-    static void gameOver()
-    {
+    static void gameOver() {
         int colorPicker = 0;
 
         drawShape(DRAW_BLOCK);
         timer(100);
         playSound(GAME_OVER);
         
-        for (int i = gridHeight; i >= 0; i--)
-        {
-            for (int j = 0; j < COLS; j++)
-            {
+        for (int i = gridHeight; i >= 0; i--) {
+            for (int j = 0; j < COLS; j++) {
                 grid[i][j] = BLOCK;
                 
                 // Picks the colors from the array to display the rainbow.
@@ -899,10 +782,8 @@ public class Tetris extends Variables
             if (colorPicker == COLORS.length) colorPicker = 0;
         }
         
-        for (int i = gridHeight; i >= 0; i--)
-        {
-            for (int j = 0; j < COLS; j++)
-            {
+        for (int i = gridHeight; i >= 0; i--) {
+            for (int j = 0; j < COLS; j++) {
                 grid[i][j] = EMPTY;
                 timer(4);
             }
@@ -915,8 +796,7 @@ public class Tetris extends Variables
 
     // SET VALUES TO DEFAULT
 
-    static void setValuesToDefault()
-    {
+    static void setValuesToDefault() {
         level = 1;
         lines = 0;
         millis = 1000;
@@ -926,15 +806,12 @@ public class Tetris extends Variables
 
     // PAUSE
 
-    static void pause()
-    {
-        if (paused)
-        {
+    static void pause() {
+        if (paused) {
             paused = false;
             if (!checkingLine) canMove = true;
         }
-        else
-        {
+        else {
             paused = true;
             canMove = false;
         }
@@ -943,12 +820,10 @@ public class Tetris extends Variables
     
     // TIMER
 
-    static void timer(long ms)
-    {
+    static void timer(long ms) {
         long startTimer = System.nanoTime();
         long stopTimer = System.nanoTime() + 1;
-        while (stopTimer < (startTimer + ms * 1_000_000))
-        {
+        while (stopTimer < (startTimer + ms * 1_000_000)) {
             stopTimer = System.nanoTime();
         }
     }
@@ -956,12 +831,9 @@ public class Tetris extends Variables
 
     // CLEAR NEXT SHAPE GRID
 
-    static void clearNextShapeGrid()
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            for (int j = 0; j < 4; j++)
-            {
+    static void clearNextShapeGrid() {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
                 nextShapeGrid[i][j] = EMPTY;
             }
         }
@@ -970,32 +842,25 @@ public class Tetris extends Variables
 
     // COMMANDS
 
-    static void clearScreen()
-    {
+    static void clearScreen() {
         System.out.print("\u001b[H\u001b[2J");
         System.out.flush();
     }
 
-    static void clearCommand()
-    {
-        try
-        {
+    static void clearCommand() {
+        try {
             new ProcessBuilder("bash", "-c", "clear").inheritIO().start().waitFor();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    static void figlet(String str)
-    {
-        try
-        {
+    static void figlet(String str) {
+        try {
             new ProcessBuilder("bash", "-c", "figlet " + str).inheritIO().start().waitFor();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1003,34 +868,28 @@ public class Tetris extends Variables
 
     // PLAY SOUND
 
-    static void playSoundLoop()
-    {
+    static void playSoundLoop() {
         String filePath;
 
-        if (firstLoop)
-        {
+        if (firstLoop) {
             filePath = selectedSong;
             firstLoop = false;
         }
-        else
-        {
+        else {
             filePath = prevSong;
         }
 
         while (filePath.equals(prevSong)) filePath = THEMES[rand.nextInt(0, THEMES.length)];
         prevSong = filePath;
 
-        try
-        {
+        try {
             File soundFile = new File(filePath);
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
 
-            clip.addLineListener(event ->
-            {
-                if (event.getType() == LineEvent.Type.STOP)
-                {
+            clip.addLineListener(event -> {
+                if (event.getType() == LineEvent.Type.STOP) {
                     clip.close();
                     playSoundLoop();
                 }
@@ -1038,23 +897,19 @@ public class Tetris extends Variables
 
             clip.start();
         }
-        catch (LineUnavailableException | IOException | UnsupportedAudioFileException e)
-        {
+        catch (LineUnavailableException | IOException | UnsupportedAudioFileException e) {
             e.printStackTrace();
         }
     }
 
-    static void playSound(String filePath)
-    {
-        try
-        {
+    static void playSound(String filePath) {
+        try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filePath));
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             clip.start();
         }
-        catch (UnsupportedAudioFileException | IOException | LineUnavailableException e)
-        {
+        catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
     }
@@ -1062,8 +917,7 @@ public class Tetris extends Variables
 
     // GAME CLOSE
 
-    static void gameClose()
-    {
+    static void gameClose() {
         loop = false;
         clearCommand();
         System.out.print(SHOW_CURSOR);
@@ -1119,8 +973,7 @@ class Variables
     static final String HIDE_CURSOR = "\033[?25l";
     static final String SHOW_CURSOR = "\033[?25h";
 
-    static final String[] THEMES =
-    {
+    static final String[] THEMES = {
         RANDOM,
         THEME1,
         THEME2,
@@ -1130,8 +983,7 @@ class Variables
         COOLER_THEME,
     };
 
-    static final String[] COLORS =
-    {
+    static final String[] COLORS = {
         COLOR_ORANGE,
         COLOR_GREEN,
         COLOR_CYAN,
@@ -1184,108 +1036,43 @@ class Variables
     static boolean paused = false;
     static boolean loop = true;
 
-    static final char[][][] T =
-    {
-        {
-            {' ',' ',' '},
-            {'▄','▄','▄'},
-            {' ','▄',' '}
-        },{
-            {' ','▄'},
-            {'▄','▄'},
-            {' ','▄'}
-        },{
-            {' ','▄',' '},
-            {'▄','▄','▄'}
-        },{
-            {' ','▄',' '},
-            {' ','▄','▄'},
-            {' ','▄',' '}
+    static final char[][][] T = { { {' ',' ',' '}, {'▄','▄','▄'}, {' ','▄',' '}
+        },{ {' ','▄'}, {'▄','▄'}, {' ','▄'}
+        },{ {' ','▄',' '}, {'▄','▄','▄'}
+        },{ {' ','▄',' '}, {' ','▄','▄'}, {' ','▄',' '}
         }
     };
 
-    static final char[][][] L =
-    {
-        {
-            {' ',' ','▄'},
-            {'▄','▄','▄'}
-        },{
-            {' ','▄',' '},
-            {' ','▄',' '},
-            {' ','▄','▄'}
-        },{
-            {' ',' ',' '},
-            {'▄','▄','▄'},
-            {'▄',' ',' '}
-        },{
-            {'▄','▄'},
-            {' ','▄'},
-            {' ','▄'}
+    static final char[][][] L = { { {' ',' ','▄'}, {'▄','▄','▄'}
+        },{ {' ','▄',' '}, {' ','▄',' '}, {' ','▄','▄'}
+        },{ {' ',' ',' '}, {'▄','▄','▄'}, {'▄',' ',' '}
+        },{ {'▄','▄'}, {' ','▄'}, {' ','▄'}
         }
     };
 
-    static final char[][][] J =
-    {
-        {
-            {' ',' ',' '},
-            {'▄','▄','▄'},
-            {' ',' ','▄'}
-        },{
-            {' ','▄'},
-            {' ','▄'},
-            {'▄','▄'}
-        },{
-            {'▄',' ',' '},
-            {'▄','▄','▄'}
-        },{
-            {' ','▄','▄'},
-            {' ','▄',' '},
-            {' ','▄',' '}
+    static final char[][][] J = { { {' ',' ',' '}, {'▄','▄','▄'}, {' ',' ','▄'}
+        },{ {' ','▄'}, {' ','▄'}, {'▄','▄'}
+        },{ {'▄',' ',' '}, {'▄','▄','▄'}
+        },{ {' ','▄','▄'}, {' ','▄',' '}, {' ','▄',' '}
         }
     };
 
-    static final char[][][] Z =
-    {
-        {
-            {'▄','▄',' '},
-            {' ','▄','▄'}
-        },{
-            {' ','▄'},
-            {'▄','▄'},
-            {'▄',' '}
+    static final char[][][] Z = { { {'▄','▄',' '}, {' ','▄','▄'}
+        },{ {' ','▄'}, {'▄','▄'}, {'▄',' '}
         },
     };
 
-    static final char[][][] S =
-    {
-        {
-            {' ','▄','▄'},
-            {'▄','▄',' '}
-        },{
-            {' ','▄',' '},
-            {' ','▄','▄'},
-            {' ',' ','▄'}
+    static final char[][][] S = { { {' ','▄','▄'}, {'▄','▄',' '}
+        },{ {' ','▄',' '}, {' ','▄','▄'}, {' ',' ','▄'}
         },
     };
 
-    static final char[][][] I =
-    {
-        {
-            {' ',' ',' ',' '},
-            {'▄','▄','▄','▄'}
-        },{
-            {' ','▄'},
-            {' ','▄'},
-            {' ','▄'},
-            {' ','▄'}
+    static final char[][][] I = { { {' ',' ',' ',' '}, {'▄','▄','▄','▄'}
+        },{ {' ','▄'}, {' ','▄'}, {' ','▄'}, {' ','▄'}
         }
     };
 
-    static final char[][][] O =
-    {
-        {
-            {'▄','▄'},
-            {'▄','▄'}
+    static final char[][][] O = { { {'▄','▄'}, {'▄','▄'}
         }
     };
 
@@ -1293,13 +1080,10 @@ class Variables
     static char[][][] shape = SHAPES[rand.nextInt(0, SHAPES.length)];
     static char[][][] nextShape = SHAPES[rand.nextInt(0, SHAPES.length)];
 
-    private static char[][] createGrid(int rows, int cols)
-    {
+    private static char[][] createGrid(int rows, int cols) {
         char[][] grid = new char[ROWS][COLS];
-        for (int row = 0; row < rows; row++)
-        {
-            for (int col = 0; col < cols; col++)
-            {
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
                 grid[row][col] = EMPTY;
             }
         }
@@ -1307,13 +1091,10 @@ class Variables
         return grid;
     }
 
-    private static String[][] createColorGrid()
-    {
+    private static String[][] createColorGrid() {
         String[][] grid = new String[ROWS][COLS];
-        for (int row = 0; row < ROWS; row++)
-        {
-            for (int col = 0; col < COLS; col++)
-            {
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
                 grid[row][col] = "";
             }
         }

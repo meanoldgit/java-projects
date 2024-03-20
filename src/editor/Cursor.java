@@ -52,11 +52,11 @@ public class Cursor {
     public void printLineAfterCursor(ArrayList<Character> col) {
         savePosition();
         
-        for (int i = x; i < col.size(); i++)
+        for (int i = x; i < col.size(); i++) {
             System.out.print(col.get(i));
-        
+        }
+
         System.out.print(' ');
-        
         restorePosition();
     }
     
