@@ -8,8 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
-public class Tetris extends Variables
-{
+public class Tetris extends Variables {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Tetris");
         long startTimer;
@@ -164,7 +163,7 @@ public class Tetris extends Variables
 
             for (int j = 0; j < width; j++) {
                 blockX = x + j;
-                
+
                 if (shp[dir][i][j] == BLOCK) {
                     if (action == DRAW_NEXT_SHAPE) {
                         if (nextShape == O) nextShapeGrid[i + 1][j + 1] = BLOCK;
@@ -474,8 +473,10 @@ public class Tetris extends Variables
         // Draw the shadow.
         for (int i = 0; i < shadow[direction].length; i++) {
             blockY = shadowY + i;
+
             for (int j = 0; j < shadow[direction][i].length; j++) {
                 blockX = shadowX + j;
+                
                 if (shadow[direction][i][j] == BLOCK && grid[blockY][blockX] != BLOCK) {
                     grid[blockY][blockX] = SHADOW;
                     colorGrid[blockY][blockX] = shapeColor;
@@ -1036,43 +1037,113 @@ class Variables
     static boolean paused = false;
     static boolean loop = true;
 
-    static final char[][][] T = { { {' ',' ',' '}, {'▄','▄','▄'}, {' ','▄',' '}
-        },{ {' ','▄'}, {'▄','▄'}, {' ','▄'}
-        },{ {' ','▄',' '}, {'▄','▄','▄'}
-        },{ {' ','▄',' '}, {' ','▄','▄'}, {' ','▄',' '}
+    static final char[][][] T = {
+        {
+            {' ',' ',' '},
+            {'▄','▄','▄'},
+            {' ','▄',' '}
+        },
+        {
+            {' ','▄'},
+            {'▄','▄'},
+            {' ','▄'}
+        },
+        {
+            {' ','▄',' '},
+            {'▄','▄','▄'}
+        },
+        {
+            {' ','▄',' '},
+            {' ','▄','▄'},
+            {' ','▄',' '}
         }
     };
 
-    static final char[][][] L = { { {' ',' ','▄'}, {'▄','▄','▄'}
-        },{ {' ','▄',' '}, {' ','▄',' '}, {' ','▄','▄'}
-        },{ {' ',' ',' '}, {'▄','▄','▄'}, {'▄',' ',' '}
-        },{ {'▄','▄'}, {' ','▄'}, {' ','▄'}
+    static final char[][][] L = {
+        {
+            {' ',' ','▄'},
+            {'▄','▄','▄'}
+        },
+        {
+            {' ','▄',' '},
+            {' ','▄',' '},
+            {' ','▄','▄'}
+        },
+        {
+            {' ',' ',' '},
+            {'▄','▄','▄'},
+            {'▄',' ',' '}
+        },
+        {
+            {'▄','▄'},
+            {' ','▄'},
+            {' ','▄'}
         }
     };
 
-    static final char[][][] J = { { {' ',' ',' '}, {'▄','▄','▄'}, {' ',' ','▄'}
-        },{ {' ','▄'}, {' ','▄'}, {'▄','▄'}
-        },{ {'▄',' ',' '}, {'▄','▄','▄'}
-        },{ {' ','▄','▄'}, {' ','▄',' '}, {' ','▄',' '}
+    static final char[][][] J = {
+        {
+            {' ',' ',' '},
+            {'▄','▄','▄'},
+            {' ',' ','▄'}
+        },
+        {
+            {' ','▄'},
+            {' ','▄'},
+            {'▄','▄'}
+        },
+        {
+            {'▄',' ',' '},
+            {'▄','▄','▄'}
+        },
+        {
+            {' ','▄','▄'},
+            {' ','▄',' '},
+            {' ','▄',' '}
         }
     };
 
-    static final char[][][] Z = { { {'▄','▄',' '}, {' ','▄','▄'}
-        },{ {' ','▄'}, {'▄','▄'}, {'▄',' '}
+    static final char[][][] Z = {
+        {
+            {'▄','▄',' '},
+            {' ','▄','▄'}
+        },
+        {
+            {' ','▄'},
+            {'▄','▄'},
+            {'▄',' '}
+        }
+    };
+
+    static final char[][][] S = {
+        {
+            {' ','▄','▄'},
+            {'▄','▄',' '}
+        },
+        {
+            {' ','▄',' '},
+            {' ','▄','▄'},
+            {' ',' ','▄'}
         },
     };
 
-    static final char[][][] S = { { {' ','▄','▄'}, {'▄','▄',' '}
-        },{ {' ','▄',' '}, {' ','▄','▄'}, {' ',' ','▄'}
+    static final char[][][] I = {
+        {
+            {' ',' ',' ',' '},
+            {'▄','▄','▄','▄'}
         },
-    };
-
-    static final char[][][] I = { { {' ',' ',' ',' '}, {'▄','▄','▄','▄'}
-        },{ {' ','▄'}, {' ','▄'}, {' ','▄'}, {' ','▄'}
+        {
+            {' ','▄'},
+            {' ','▄'},
+            {' ','▄'},
+            {' ','▄'}
         }
     };
 
-    static final char[][][] O = { { {'▄','▄'}, {'▄','▄'}
+    static final char[][][] O = {
+        {
+            {'▄','▄'},
+            {'▄','▄'}
         }
     };
 
