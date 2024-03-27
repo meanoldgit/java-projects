@@ -6,8 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class FileManager
-{
+public class FileManager {
     File file;
     String fileName;
     ArrayList<ArrayList<Character>> lines;

@@ -7,7 +7,6 @@ public class Editor {
     public static void main(String[] args) {
         String fileName;
         Key key;
-        HotKeys hk = new HotKeys();
         JFrame frame = new JFrame();
         
         if (args.length > 0) fileName = args[0];
@@ -18,7 +17,6 @@ public class Editor {
         frame.setVisible(true);
         frame.setFocusable(true);
         frame.addKeyListener(key);
-        frame.addKeyListener(hk);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setBackground(new Color(0, 0, 0, 1));

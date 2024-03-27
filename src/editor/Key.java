@@ -2,14 +2,17 @@ package editor;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 import java.util.ArrayList;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 
 class Key implements KeyListener {
     ArrayList<ArrayList<Character>> lines = new ArrayList<>();
-    HotKeys hotKeys;
+    HotKeys hotKeys = new HotKeys();
     Cursor cursor = new Cursor();
     FileManager fileManager;
-
+    
     int screenHeight = 10;
     int screenWidth = 70;
     int scroll = 0;
@@ -27,9 +30,17 @@ class Key implements KeyListener {
 
     // Modify the constructor to pass the main parameter argument.
     public Key(String fileName) {
-        
+
+        try {
+            Terminal t = TerminalBuilder.builder().build();
+            System.out.println(t.getWidth());
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("hello");
         this.fileManager = new FileManager(fileName, lines);
-        // this.hotKeys = new HotKeys();
         clearCommand();
 
         if (fileName != null) {
@@ -145,16 +156,30 @@ class Key implements KeyListener {
             break;
         }
 
+        handleCtrl(event);
+        handleCtrlShift(event);
+    }
+
+    public void handleCtrl(KeyEvent event) {
         if (ctrlPressed && !shiftPressed) {
             switch (event.getKeyCode()) {
                 case KeyEvent.VK_C:
-                // hotKeys.close(lines);
+                hotKeys.close(lines);
                 break;
 
                 case KeyEvent.VK_S:
                 fileManager.writeFile();
                 break;
 
+                default:
+                break;
+            }
+        }
+    }
+
+    public void handleCtrlShift(KeyEvent event) {
+        if (ctrlPressed && shiftPressed) {
+            switch (event.getKeyCode()) {
                 default:
                 break;
             }
