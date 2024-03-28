@@ -12,6 +12,7 @@ class Key implements KeyListener {
     HotKeys hotKeys = new HotKeys();
     Cursor cursor = new Cursor();
     FileManager fileManager;
+    Terminal t;
     
     int screenHeight = 10;
     int screenWidth = 70;
@@ -28,20 +29,18 @@ class Key implements KeyListener {
     final char EMPTY_SPACE = ' ';
     final String SYMBOLS_REGEX = "[ .,:;_+-/\\*!\"'%$&@#~|()=¿?<>{}\\[\\]]";
 
-    // Modify the constructor to pass the main parameter argument.
     public Key(String fileName) {
 
         try {
-            Terminal t = TerminalBuilder.builder().build();
+            this.t = TerminalBuilder.builder().build();
             System.out.println(t.getWidth());
         }
         catch (IOException e) {
             e.printStackTrace();
         }
 
-        System.out.println("hello");
         this.fileManager = new FileManager(fileName, lines);
-        clearCommand();
+        // clearCommand();
 
         if (fileName != null) {
             fileManager.openFile();
@@ -64,8 +63,6 @@ class Key implements KeyListener {
         // TODO: Remove all '\n' when opening file.
     }
 
-    public Key() {}
-
     @Override
     public void keyTyped(KeyEvent event) {
         letter = event.getKeyChar();
@@ -83,7 +80,7 @@ class Key implements KeyListener {
         return (Character.isLetterOrDigit(letter)
         || String.valueOf(letter).matches(SYMBOLS_REGEX))
         && lines.get(cursor.y).size() < screenWidth
-        && !cursorMode && !altPressed;
+        && !cursorMode && !altPressed && !shiftPressed && !ctrlPressed;
     }
 
     @Override
